@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>🌸 8/3 - Gửi Các Bạn Nữ 🌸</title>
+    <title>🌸 8/3 - Gửi Các Bạn Nữ  🌸</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Patrick+Hand&family=Indie+Flower&display=swap" rel="stylesheet">
@@ -433,7 +433,6 @@
             max-height: 350px;
             overflow-y: auto;
             min-height: 200px;
-            /* Đảm bảo hiển thị */
             visibility: visible !important;
             opacity: 1 !important;
         }
@@ -442,7 +441,7 @@
             background: white;
             padding: 12px 15px;
             border-radius: 40px;
-            display: flex !important; /* Force hiển thị */
+            display: flex !important;
             align-items: center;
             gap: 12px;
             transition: all 0.15s;
@@ -585,7 +584,6 @@
             border: 2px solid white;
         }
 
-        /* hiệu ứng vui nhộn */
         .confetti {
             position: fixed;
             width: 8px;
@@ -614,7 +612,6 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* iphone */
         @media (max-width: 700px) {
             .modal-layout {
                 flex-direction: column;
@@ -652,7 +649,7 @@
     <!-- Welcome -->
     <div class="welcome-screen">
         <div class="welcome-content">
-            <h1 class="welcome-title">GỬI CÁC BẠN NỮ CỰC PHẨM</h1>
+            <h1 class="welcome-title">GỬI CÁC BẠN NỮ </h1>
             <p class="welcome-subtitle">Nhấn vào quà để nhận lời chúc 8/3 từ cả lớp nha!</p>
             <button class="start-button">Mở quà ngay 🌸</button>
         </div>
@@ -703,7 +700,7 @@
                         <div class="content-column">
                             <div class="typed-container"></div>
                             
-                            <!-- Container lời chúc - đã fix lỗi hiển thị -->
+                            <!-- Container lời chúc -->
                             <div class="wishes-container" id="wishesContainer"></div>
                         </div>
                     </div>
@@ -767,7 +764,7 @@
             let isVolumeVisible = false;
             let isDarkTheme = false;
 
-            // 5 lời chúc siêu vui cho các bạn nữ - ĐẢM BẢO 5 CÁI
+            // 5 lời chúc siêu vui cho các bạn nữ
             const wishes = [
                 { icon: "📚", text: "Học giỏi như tiên, điểm 10 như mưa, thi gì đỗ đó" },
                 { icon: "💃", text: "Xinh đẹp lên từng ngày, tự tin toả sáng mọi lúc" },
@@ -781,12 +778,18 @@
                 gsap.to(loading, { opacity: 0, duration: 0.5, onComplete: () => loading.style.display = 'none' });
             }, 1600);
 
-            // Start
+            // Start - PHÁT NHẠC NGAY KHI VÀO WEB
             startBtn.addEventListener('click', () => {
                 gsap.to(welcome, { opacity: 0, duration: 0.8, onComplete: () => {
                     welcome.style.display = 'none';
                     main.style.display = 'block';
                     startMain();
+                    
+                    // PHÁT NHẠC NGAY KHI VÀO MAIN
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        updateMusicButton();
+                    }).catch(e => console.log('Chưa thể phát nhạc tự động:', e));
                 }});
             });
 
@@ -800,21 +803,13 @@
                 bgMusic.volume = volumeSlider.value / 100;
                 openSound.volume = volumeSlider.value / 100;
                 modalSound.volume = volumeSlider.value / 100;
-
-                // thử phát nhạc
-                bgMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    updateMusicButton();
-                }).catch(() => {});
             }
 
-            // Mở phong bì
+            // Mở phong bì - CHỈ MỞ MODAL, KHÔNG PHÁT NHẠC
             envelopeContainer.addEventListener('click', () => {
                 if (!isEnvelopeOpen) {
                     isEnvelopeOpen = true;
                     envelope.classList.add('open');
-
-                    playSound(openSound);
 
                     gsap.to('.envelope-container', { scale: 1, y: 0 });
                     setTimeout(() => {
@@ -830,7 +825,7 @@
                 gsap.to(modal, { opacity: 1, duration: 0.2 });
                 gsap.to(modalContent, { scale: 1, y: 0, opacity: 1, duration: 0.5, ease: "backOut" });
 
-                playSound(modalSound);
+                // KHÔNG playSound(modalSound) nữa - không phát nhạc khi mở modal
 
                 // Typed
                 const typed = new Typed('.typed-container', {
@@ -848,21 +843,18 @@
                     return;
                 }
                 
-                // Xóa hết nội dung cũ
                 container.innerHTML = '';
                 
-                // Duyệt mảng và tạo phần tử - HIỂN THỊ ĐỦ 5 LỜI CHÚC
                 for (let i = 0; i < wishes.length; i++) {
                     const w = wishes[i];
                     const div = document.createElement('div');
                     div.className = 'wish-item';
-                    div.style.display = 'flex'; // Force hiển thị
+                    div.style.display = 'flex';
                     div.style.opacity = '1';
                     div.style.visibility = 'visible';
                     div.innerHTML = `<span class="wish-icon">${w.icon}</span><span class="wish-text">${w.text}</span>`;
                     container.appendChild(div);
                     
-                    // Animation
                     gsap.from(div, { 
                         opacity: 0, 
                         x: -20, 
@@ -871,9 +863,7 @@
                     });
                 }
                 
-                // Thông báo số lượng
                 console.log('Đã hiển thị', wishes.length, 'lời chúc');
-                console.log('Số phần tử trong container:', container.children.length);
             }
 
             closeBtn.addEventListener('click', closeModal);
@@ -895,7 +885,7 @@
                     bgMusic.play().then(() => {
                         isMusicPlaying = true;
                         updateMusicButton();
-                    }).catch(() => alert('Nhấn mở thiệp trước để bật nhạc nha!'));
+                    }).catch(() => alert('Không thể phát nhạc!'));
                 } else {
                     bgMusic.pause();
                     isMusicPlaying = false;
@@ -973,7 +963,7 @@
             // Esc close
             document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
 
-            console.log('🎀 Thiệp 8/3 với 5 lời chúc và khung ảnh đã sẵn sàng!');
+            console.log('🎀 Thiệp 8/3 - Nhạc phát tự động khi vào web');
         })();
     </script>
 </body>
